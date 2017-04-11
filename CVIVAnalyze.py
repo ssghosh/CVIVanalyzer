@@ -109,8 +109,8 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
         # The data files no longer report the frequencies used but it would be good to reimplement this feature
         #if count == LCV1:
         #     dataCV = line.strip().split()
-        #     freq1 = int(dataCV[1])
-        #     freq2 = int(dataCV[2])
+        freq1 = 1000
+        freq2 = 10000
         if count > LCV1 and count < LCV2:
              dataCV = line.strip().split()
              # flip signs if the voltages are negative so all plots are with positive voltages
@@ -123,9 +123,9 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
              #if len(dataCV) > 4:
              #    Gf1.append(float(dataCV[3]))
              #    Gf2.append(float(dataCV[4]))
-             if temp_idx:
+             if cv_temp_idx:
                  TempCV.append(float(dataCV[cv_temp_idx]))
-             if dewpt_idx:
+             if cv_dewpt_idx:
                  DewTempCV.append(float(dataCV[cv_dewpt_idx]))
 
     if float(dataCV[0]) > 0 and SensorType == 1 or float(dataCV[0]) < 0 and SensorType == 0:

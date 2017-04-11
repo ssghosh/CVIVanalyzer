@@ -1,0 +1,67 @@
+Frequency: 1000 (Hz)
+Fitting: Linear-Horizontal-loglog
+Range: 10 - 980 (V)
+Annealing: 0min
+Thickness: 295.93 pm 0.4 (um)
+Active Area: 25.0 (mm2)
+Capacitance: 8.901 pm 0.012 (pF)
+V_dep: 94.75 pm 2.44 (V)
+V_bd: $\approx$ 170 (V)$--yellow$ $line$
+V_bd(GR): $\approx$ 740 (V)$--lime$ $line$
+N_eff: 14.23 pm 0.37 (10E11 cm-3)
+I_(V_dep): 77.05 (pA)
+I_(V_dep)(-20C): 77.97 (pA)
+I_(1.2V_dep): 259.48 (pA)
+I_(1.2V_dep)(-20C): 261.94 (pA)
+C_(1.2V_dep): 9.186 (pF)
+
+Frequency: 10000 (Hz)
+Fitting: Linear-Horizontal-loglog
+Range: 10 - 980 (V)
+Annealing: 0min
+Thickness: 286.43 pm 0.37 (um)
+Active Area: 25.0 (mm2)
+Capacitance: 9.196 pm 0.012 (pF)
+V_dep: 93.92 pm 2.4 (V)
+V_bd: $\approx$ 170 (V)$--yellow$ $line$
+V_bd(GR): $\approx$ 740 (V)$--lime$ $line$
+N_eff: 14.11 pm 0.39 (10E11 cm-3)
+I_(V_dep): 73.33 (pA)
+I_(V_dep)(-20C): 74.18 (pA)
+I_(1.2V_dep): 246.78 (pA)
+I_(1.2V_dep)(-20C): 249.14 (pA)
+C_(1.2V_dep): 9.476 (pF)
+
+Frequency: 1000 (Hz)
+Fitting: Linear-Horizontal-1C2
+Range: 10 - 980 (V)
+Annealing: 0min
+Thickness: 295.9 pm 0.4 (um)
+Active Area: 25.0 (mm2)
+Capacitance: 8.902 pm 0.012 (pF)
+V_dep: 91.44 pm 0.41 (V)
+V_bd: $\approx$ 170 (V)$--yellow$ $line$
+V_bd(GR): $\approx$ 740 (V)$--lime$ $line$
+N_eff: 13.74 pm 0.07 (10E11 cm-3)
+I_(V_dep): 62.19 (pA)
+I_(V_dep)(-20C): 62.83 (pA)
+I_(1.2V_dep): 112.8 (pA)
+I_(1.2V_dep)(-20C): 114.66 (pA)
+C_(1.2V_dep): 9.186 (pF)
+
+Frequency: 10000 (Hz)
+Fitting: Linear-Horizontal-1C2
+Range: 10 - 980 (V)
+Annealing: 0min
+Thickness: 286.42 pm 0.25 (um)
+Active Area: 25.0 (mm2)
+Capacitance: 9.197 pm 0.008 (pF)
+V_dep: 89.93 pm 0.4 (V)
+V_bd: $\approx$ 170 (V)$--yellow$ $line$
+V_bd(GR): $\approx$ 740 (V)$--lime$ $line$
+N_eff: 14.42 pm 0.07 (10E11 cm-3)
+I_(V_dep): 107.24 (pA)
+I_(V_dep)(-20C): 109.39 (pA)
+I_(1.2V_dep): 107.55 (pA)
+I_(1.2V_dep)(-20C): 109.29 (pA)
+C_(1.2V_dep): 9.476 (pF)

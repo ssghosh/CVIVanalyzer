@@ -45,7 +45,9 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
     else:
         print "Error: IV data file path does not exist. Please check the file location.\nAborting..."
         os._exit(1)
-
+        
+    cv_temp_idx = 0
+    cv_dewpt_idx = 0
     count = 1
     LCV1 = 0
     for line in linesCV:
@@ -56,37 +58,43 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
             Annealing = line[18:-1]
         if line.startswith("Environment:"):
             Environment = line[13:-1]
-        if line.startswith("Note: first column reads voltage"):
+        if line.startswith("BiasVoltage"):
+            words = line.split("\t")
             LCV1 = count
-        if line.startswith("Temperature"):
-            LCV2 = count
+            cv_temp_idx = words.index("Temperature") if "Temperature" in words else None
+            cv_dewpt_idx = words.index("Dewpoint") if "Dewpoint" in words else None
             break
         count +=1
+    LCV2 = len(linesCV) - 1
     if LCV1 == 0:
         print "Error: Unexpected CV data file. Please check CV data file.\nAborting..."
         os._exit(1) 
     LCV1 = LCV1 + 1
-    LCV2 = LCV2 - 2
 
     count = 1
     LIV1 = 0
+    iv_temp_idx = 0
+    iv_dewpt_idx = 0
     for line in linesIV:
 
         if line.startswith("Sensor Name:"):
             if SenName != line[13:-1]:
                 print "Error: Sensor names do not match. Please check data files.\nAborting..."
                 os._exit(1)            
-        if line.startswith("Voltage	Current"):
+        if line.startswith("BiasVoltage"):
+            words = line.split("\t")
             LIV1 = count
-        if line.startswith("Individual IV Measurements"):
-            LIV2 = count
+            iv_bias_idx = words.index("Current_Avg")
+            iv_guard_idx = words.index("GR Current_Avg") if "GR Current_Avg" in words else None
+            iv_temp_idx = words.index("Temperature") if "Temperature" in words else None
+            iv_dewpt_idx = words.index("Dewpoint") if "Dewpoint" in words else None
             break
         count +=1
     if LIV1 == 0:
         print "Error: Unexpected IV data file. Please check IV data file.\nAborting..."
         os._exit(1)
     LIV1 = LIV1
-    LIV2 = LIV2 - 2
+    LIV2 = len(linesIV) - 1
 
     count = 0
     BVolCV = []
@@ -98,24 +106,27 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
     DewTempCV = []
     for line in linesCV:
         count +=1
-        if count == LCV1:
-             dataCV = line.strip().split()
-             freq1 = int(dataCV[1])
-             freq2 = int(dataCV[2])
+        # The data files no longer report the frequencies used but it would be good to reimplement this feature
+        #if count == LCV1:
+        #     dataCV = line.strip().split()
+        #     freq1 = int(dataCV[1])
+        #     freq2 = int(dataCV[2])
         if count > LCV1 and count < LCV2:
              dataCV = line.strip().split()
+             # flip signs if the voltages are negative so all plots are with positive voltages
              if SensorType == 1:
                  BVolCV.append(-float(dataCV[0]))
              if SensorType == 0:
                  BVolCV.append(float(dataCV[0]))
              Capf1paral.append(float(dataCV[1]) + CapOffset)
              Capf2paral.append(float(dataCV[2]) + CapOffset)
-             if len(dataCV) > 4:
-                 Gf1.append(float(dataCV[3]))
-                 Gf2.append(float(dataCV[4]))
-             TempCV.append(dataCV[-1])
-             if len(dataCV) > 4:
-                 DewTempCV.append(dataCV[-2])
+             #if len(dataCV) > 4:
+             #    Gf1.append(float(dataCV[3]))
+             #    Gf2.append(float(dataCV[4]))
+             if temp_idx:
+                 TempCV.append(float(dataCV[cv_temp_idx]))
+             if dewpt_idx:
+                 DewTempCV.append(float(dataCV[cv_dewpt_idx]))
 
     if float(dataCV[0]) > 0 and SensorType == 1 or float(dataCV[0]) < 0 and SensorType == 0:
         print "Error: Sensor type is not correct.\nAborting..."
@@ -133,15 +144,18 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
              dataIV = line.strip().split()
              if SensorType == 1:
                  BVolIV.append(-float(dataIV[0]))
-                 LCur.append(-float(dataIV[1]))
-                 GCur.append(-float(dataIV[2]))
+                 LCur.append(-float(dataIV[iv_bias_idx]))
+                 if iv_guard_idx:
+                     GCur.append(-float(dataIV[iv_guard_idx]))
              if SensorType == 0:
                  BVolIV.append(float(dataIV[0]))
-                 LCur.append(float(dataIV[1]))
-                 GCur.append(float(dataIV[2]))
-             TempIV.append(dataIV[-1])
-             if len(dataIV) > 4:
-                 DewTempIV.append(dataIV[-2])
+                 LCur.append(float(dataIV[iv_bias_idx]))
+                 if iv_guard_idx:
+                     GCur.append(float(dataIV[iv_guard_idx]))
+             if iv_temp_idx:
+                 TempIV.append(dataIV[iv_temp_idx])
+             if iv_dewpt_idx:
+                 DewTempIV.append(dataIV[iv_dewpt_idx])
 
     """"""""" Fixing voltage column for CV measurement for P-type sensors """""""""
     """"""""" This is because of a bug in LabView code, but the bug's been fixed """""""""
@@ -179,6 +193,8 @@ def ConfigurationParameters(CVFileLocation, IVFileLocation, PlotSavingLocation, 
     DewTempIV = map(float, DewTempIV)
 
     """"""""" MODIFIYING DATA FILE FOR P-TYPE SENSORS """""""""
+    # this seems to be here simply to write new files with all positive bias voltages in the first column
+    # it could also be used to put the columns in a file in a different order
 
     if SensorType == 1:
         ModifiedFileLocationCV = CVFileLocation[:-4]
